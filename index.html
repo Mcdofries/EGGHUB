@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Waves Hub</title>
+<style>
+body {
+  background:#0f0f0f;
+  color:white;
+  font-family:Arial;
+  text-align:center;
+  padding:40px;
+}
+.card {
+  background:#1a1a1a;
+  padding:20px;
+  margin:20px auto;
+  max-width:400px;
+  border-radius:12px;
+}
+button {
+  padding:10px 20px;
+  background:#00ffcc;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Waves Hub</h1>
+<p>Best Free Scripts</p>
+
+<div class="card">
+  <h2>Escape Tsunami Script</h2>
+  <button onclick="copyScript()">Copy Script</button>
+</div>
+
+<script>
+function copyScript() {
+  navigator.clipboard.writeText(
+`loadstring(game:HttpGet("https://yourlink.com/script.lua"))()`
+  );
+  alert("Copied!");
+}
+</script>
+
+</body>
+</html>
