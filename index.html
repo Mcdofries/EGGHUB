@@ -1,138 +1,153 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>EGG HUB</title>
 
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+
 <style>
-* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
-
-body {
-  background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
-  color:white;
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  min-height:100vh;
-  overflow-x:hidden;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Inter',sans-serif;
 }
 
-h1 {
-  margin-top:80px;
-  font-size:3rem;
-  background:linear-gradient(90deg,#00ffcc,#5865F2);
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
+body{
+    height:100vh;
+    background: linear-gradient(-45deg,#0f0c29,#302b63,#24243e,#1c1c1c);
+    background-size:400% 400%;
+    animation: gradientBG 15s ease infinite;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    color:white;
 }
 
-.subtitle {
-  color:#888;
-  margin-top:10px;
+@keyframes gradientBG{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
 }
 
-.card {
-  margin-top:60px;
-  background:#151515;
-  padding:30px;
-  border-radius:18px;
-  width:90%;
-  max-width:420px;
-  text-align:center;
-  box-shadow:0 0 40px rgba(0,255,204,0.08);
-  transition:0.3s ease;
+.container{
+    width:95%;
+    max-width:800px;
 }
 
-.card:hover {
-  transform:translateY(-6px);
-  box-shadow:0 0 50px rgba(0,255,204,0.2);
+.card{
+    background:rgba(255,255,255,0.05);
+    backdrop-filter:blur(20px);
+    border:1px solid rgba(255,255,255,0.1);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    transition:0.3s ease;
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
 }
 
-button {
-  margin-top:20px;
-  padding:12px 25px;
-  border:none;
-  border-radius:10px;
-  font-weight:bold;
-  cursor:pointer;
-  background:linear-gradient(90deg,#00ffcc,#5865F2);
-  color:black;
-  transition:0.3s;
+.card:hover{
+    transform:translateY(-5px);
+    box-shadow:0 15px 50px rgba(0,0,0,0.6);
 }
 
-button:hover {
-  opacity:0.85;
+.title{
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:15px;
 }
 
-.counter {
-  margin-top:15px;
-  font-size:0.9rem;
-  color:#00ffcc;
+textarea{
+    width:100%;
+    height:100px;
+    border-radius:12px;
+    border:none;
+    padding:15px;
+    resize:none;
+    background:rgba(0,0,0,0.5);
+    color:#00ffcc;
+    font-size:14px;
+    outline:none;
 }
 
-footer {
-  margin-top:auto;
-  padding:30px;
-  color:#444;
-  font-size:0.8rem;
+.buttons{
+    margin-top:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.copy-btn{
+    background:linear-gradient(45deg,#00ffcc,#00c3ff);
+    border:none;
+    padding:10px 20px;
+    border-radius:50px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+}
+
+.copy-btn:hover{
+    transform:scale(1.05);
+    box-shadow:0 0 15px #00ffcc;
+}
+
+.counter{
+    font-size:14px;
+    opacity:0.8;
 }
 </style>
 </head>
-
 <body>
 
-<h1>EGG HUB</h1>
-<p class="subtitle">Premium Scripts • Free & Keyless</p>
+<div class="container">
 
 <div class="card">
-  <h2>Escape Tsunami Script</h2>
-  <p>Dupe, instant take & more.</p>
-  <div class="counter">Copied <span id="count">0</span> times</div>
-  <button onclick="copyScript()">Copy Script</button>
+<div class="title">EGG HUB KEYLESS DUPE 1</div>
+<textarea id="script1">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/EGG-HUB-/refs/heads/main/main/EGGHUBV2"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script1','count1')">Copy</button>
+<div class="counter">Copied: <span id="count1">0</span></div>
+</div>
 </div>
 
-<footer>© 2026 EGG HUB</footer>
+<div class="card">
+<div class="title">REDYN HUB</div>
+<textarea id="script2">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/REDYN-HUB/refs/heads/main/ksgyg748hfjdk.lua"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script2','count2')">Copy</button>
+<div class="counter">Copied: <span id="count2">0</span></div>
+</div>
+</div>
+
+</div>
 
 <script>
-async function loadCount() {
-  const res = await fetch("/api/count");
-  const data = await res.json();
-  document.getElementById("count").innerText = data.count;
+let counters = {
+    count1:0,
+    count2:0
+};
+
+function copyScript(id,countId){
+    const text = document.getElementById(id).value;
+    navigator.clipboard.writeText(text);
+
+    counters[countId]++;
+    document.getElementById(countId).innerText = counters[countId];
+
+    const btn = event.target;
+    btn.innerText = "Copied!";
+    btn.style.background = "linear-gradient(45deg,#00ff88,#00ffaa)";
+
+    setTimeout(()=>{
+        btn.innerText = "Copy";
+        btn.style.background = "linear-gradient(45deg,#00ffcc,#00c3ff)";
+    },1500);
 }
-
-async function copyScript() {
-  navigator.clipboard.writeText(
-`loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/EGG-HUB-/refs/heads/main/main/EGGHUBV2"))()`
-  );
-
-  const res = await fetch("/api/count", { method: "POST" });
-  const data = await res.json();
-
-  animateCounter(data.count);
-}
-
-function animateCounter(newValue) {
-  const el = document.getElementById("count");
-  let start = parseInt(el.innerText) || 0;
-  let duration = 400;
-  let startTime = null;
-
-  function step(timestamp) {
-    if (!startTime) startTime = timestamp;
-    let progress = timestamp - startTime;
-    let value = Math.floor(start + (newValue - start) * (progress / duration));
-    el.innerText = value;
-    if (progress < duration) {
-      requestAnimationFrame(step);
-    } else {
-      el.innerText = newValue;
-    }
-  }
-
-  requestAnimationFrame(step);
-}
-
-loadCount();
 </script>
 
 </body>
-</html>
+  </html>
+  
