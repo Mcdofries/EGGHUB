@@ -2,48 +2,136 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Waves Hub</title>
+<title>EGG HUB</title>
+
 <style>
+* { margin:0; padding:0; box-sizing:border-box; font-family:'Segoe UI',sans-serif; }
+
 body {
-  background:#0f0f0f;
+  background: radial-gradient(circle at top, #1a1a1a, #0f0f0f);
   color:white;
-  font-family:Arial;
-  text-align:center;
-  padding:40px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  min-height:100vh;
+  overflow-x:hidden;
 }
+
+h1 {
+  margin-top:80px;
+  font-size:3rem;
+  background:linear-gradient(90deg,#00ffcc,#5865F2);
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+}
+
+.subtitle {
+  color:#888;
+  margin-top:10px;
+}
+
 .card {
-  background:#1a1a1a;
-  padding:20px;
-  margin:20px auto;
-  max-width:400px;
-  border-radius:12px;
+  margin-top:60px;
+  background:#151515;
+  padding:30px;
+  border-radius:18px;
+  width:90%;
+  max-width:420px;
+  text-align:center;
+  box-shadow:0 0 40px rgba(0,255,204,0.08);
+  transition:0.3s ease;
 }
+
+.card:hover {
+  transform:translateY(-6px);
+  box-shadow:0 0 50px rgba(0,255,204,0.2);
+}
+
 button {
-  padding:10px 20px;
-  background:#00ffcc;
+  margin-top:20px;
+  padding:12px 25px;
   border:none;
-  border-radius:8px;
+  border-radius:10px;
+  font-weight:bold;
   cursor:pointer;
+  background:linear-gradient(90deg,#00ffcc,#5865F2);
+  color:black;
+  transition:0.3s;
+}
+
+button:hover {
+  opacity:0.85;
+}
+
+.counter {
+  margin-top:15px;
+  font-size:0.9rem;
+  color:#00ffcc;
+}
+
+footer {
+  margin-top:auto;
+  padding:30px;
+  color:#444;
+  font-size:0.8rem;
 }
 </style>
 </head>
+
 <body>
 
-<h1>KEYLESS EGGHUB</h1>
-<p>Best Free Scripts</p>
+<h1>EGG HUB</h1>
+<p class="subtitle">Premium Scripts • Free & Keyless</p>
 
 <div class="card">
   <h2>Escape Tsunami Script</h2>
+  <p>Dupe, instant take & more.</p>
+  <div class="counter">Copied <span id="count">0</span> times</div>
   <button onclick="copyScript()">Copy Script</button>
 </div>
 
+<footer>© 2026 EGG HUB</footer>
+
 <script>
-function copyScript() {
+async function loadCount() {
+  const res = await fetch("/api/count");
+  const data = await res.json();
+  document.getElementById("count").innerText = data.count;
+}
+
+async function copyScript() {
   navigator.clipboard.writeText(
 `loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/EGG-HUB-/refs/heads/main/main/EGGHUBV2"))()`
   );
-  alert("Copied!");
+
+  const res = await fetch("/api/count", { method: "POST" });
+  const data = await res.json();
+
+  animateCounter(data.count);
 }
+
+function animateCounter(newValue) {
+  const el = document.getElementById("count");
+  let start = parseInt(el.innerText) || 0;
+  let duration = 400;
+  let startTime = null;
+
+  function step(timestamp) {
+    if (!startTime) startTime = timestamp;
+    let progress = timestamp - startTime;
+    let value = Math.floor(start + (newValue - start) * (progress / duration));
+    el.innerText = value;
+    if (progress < duration) {
+      requestAnimationFrame(step);
+    } else {
+      el.innerText = newValue;
+    }
+  }
+
+  requestAnimationFrame(step);
+}
+
+loadCount();
 </script>
 
 </body>
