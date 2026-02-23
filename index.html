@@ -8,6 +8,16 @@
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
+*{<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EGG HUB KEYLESS SCRIPTS</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+
+<style>
 *{
     margin:0;
     padding:0;
@@ -99,4 +109,327 @@ textarea{
     transition:0.3s;
     color:white;
 }
-  
+
+.copy-btn:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 20px white;
+}
+
+.counter{
+    font-size:14px;
+    opacity:0.9;
+}
+
+.discord-section{
+    text-align:center;
+    margin-top:40px;
+}
+
+.discord-btn{
+    background:linear-gradient(45deg,#5865F2,#8f9cff);
+    padding:12px 30px;
+    border-radius:50px;
+    text-decoration:none;
+    font-weight:600;
+    color:white;
+    display:inline-block;
+    transition:0.3s;
+    box-shadow:0 0 20px rgba(88,101,242,0.6);
+}
+
+.discord-btn:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 30px rgba(88,101,242,1);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="main-title">EGG HUB KEYLESS SCRIPTS</div>
+
+<!-- SCRIPT 1 -->
+<div class="card">
+<div class="script-title">EGG HUB</div>
+<textarea id="script1">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/EGG-HUB-/refs/heads/main/main/EGGHUBV2"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script1','count1',this)">Copy</button>
+<div class="counter">Copied: <span id="count1">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 2 -->
+<div class="card">
+<div class="script-title">REDYN HUB</div>
+<textarea id="script2">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/REDYN-HUB/refs/heads/main/ksgyg748hfjdk.lua"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script2','count2',this)">Copy</button>
+<div class="counter">Copied: <span id="count2">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 3 -->
+<div class="card">
+<div class="script-title">STAR HUB</div>
+<textarea id="script3">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/STARHUB/refs/heads/main/StarHub.lua"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script3','count3',this)">Copy</button>
+<div class="counter">Copied: <span id="count3">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 4 -->
+<div class="card">
+<div class="script-title">MM2 KEYLESS SCRIPT</div>
+<textarea id="script4">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/MM2KEYLESS/refs/heads/main/Loader"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script4','count4',this)">Copy</button>
+<div class="counter">Copied: <span id="count4">0</span></div>
+</div>
+</div>
+
+<!-- DISCORD -->
+<div class="discord-section">
+<a href="https://discord.gg/4xjfyAn7g" target="_blank" class="discord-btn">
+Join Our Discord Server
+</a>
+</div>
+
+</div>
+
+<script>
+let counters = {
+    count1:0,
+    count2:0,
+    count3:0
+};
+
+function copyScript(id,countId,btn){
+    const text = document.getElementById(id).value;
+    navigator.clipboard.writeText(text);
+
+    counters[countId]++;
+    document.getElementById(countId).innerText = counters[countId];
+
+    btn.innerText = "Copied!";
+    btn.style.background = "linear-gradient(45deg,#00ff88,#00ffaa)";
+
+    setTimeout(()=>{
+        btn.innerText = "Copy";
+        btn.style.background = "linear-gradient(45deg,#ff00cc,#00ffff)";
+    },1500);
+}
+</script>
+
+</body>
+    </html>
+    
+
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+    min-height:100vh;
+    background: linear-gradient(-45deg,#ff00cc,#3333ff,#00ffcc,#ff6600,#ff0066);
+    background-size:400% 400%;
+    animation: bgMove 15s ease infinite;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    color:white;
+    padding:30px 15px;
+}
+
+@keyframes bgMove{
+    0%{background-position:0% 50%;}
+    50%{background-position:100% 50%;}
+    100%{background-position:0% 50%;}
+}
+
+.container{
+    width:100%;
+    max-width:900px;
+}
+
+.main-title{
+    text-align:center;
+    font-size:32px;
+    font-weight:800;
+    margin-bottom:40px;
+    letter-spacing:2px;
+    text-shadow:0 0 20px rgba(255,255,255,0.7);
+}
+
+.card{
+    background:rgba(255,255,255,0.08);
+    backdrop-filter:blur(20px);
+    border-radius:20px;
+    padding:25px;
+    margin-bottom:25px;
+    border:1px solid rgba(255,255,255,0.2);
+    box-shadow:0 10px 40px rgba(0,0,0,0.4);
+    transition:0.3s ease;
+}
+
+.card:hover{
+    transform:translateY(-6px);
+    box-shadow:0 20px 60px rgba(0,0,0,0.6);
+}
+
+.script-title{
+    font-size:20px;
+    font-weight:600;
+    margin-bottom:15px;
+}
+
+textarea{
+    width:100%;
+    height:100px;
+    border:none;
+    border-radius:12px;
+    padding:15px;
+    resize:none;
+    background:rgba(0,0,0,0.6);
+    color:#00ffff;
+    font-size:14px;
+    outline:none;
+}
+
+.buttons{
+    margin-top:15px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+}
+
+.copy-btn{
+    background:linear-gradient(45deg,#ff00cc,#00ffff);
+    border:none;
+    padding:10px 20px;
+    border-radius:50px;
+    font-weight:600;
+    cursor:pointer;
+    transition:0.3s;
+    color:white;
+}
+
+.copy-btn:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 20px white;
+}
+
+.counter{
+    font-size:14px;
+    opacity:0.9;
+}
+
+.discord-section{
+    text-align:center;
+    margin-top:40px;
+}
+
+.discord-btn{
+    background:linear-gradient(45deg,#5865F2,#8f9cff);
+    padding:12px 30px;
+    border-radius:50px;
+    text-decoration:none;
+    font-weight:600;
+    color:white;
+    display:inline-block;
+    transition:0.3s;
+    box-shadow:0 0 20px rgba(88,101,242,0.6);
+}
+
+.discord-btn:hover{
+    transform:scale(1.1);
+    box-shadow:0 0 30px rgba(88,101,242,1);
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+
+<div class="main-title">EGG HUB KEYLESS SCRIPTS</div>
+
+<!-- SCRIPT 1 -->
+<div class="card">
+<div class="script-title">EGG HUB</div>
+<textarea id="script1">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/EGG-HUB-/refs/heads/main/main/EGGHUBV2"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script1','count1',this)">Copy</button>
+<div class="counter">Copied: <span id="count1">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 2 -->
+<div class="card">
+<div class="script-title">REDYN HUB</div>
+<textarea id="script2">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/REDYN-HUB/refs/heads/main/ksgyg748hfjdk.lua"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script2','count2',this)">Copy</button>
+<div class="counter">Copied: <span id="count2">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 3 -->
+<div class="card">
+<div class="script-title">STAR HUB</div>
+<textarea id="script3">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/STARHUB/refs/heads/main/StarHub.lua"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script3','count3',this)">Copy</button>
+<div class="counter">Copied: <span id="count3">0</span></div>
+</div>
+</div>
+
+<!-- SCRIPT 4 -->
+<div class="card">
+<div class="script-title">MM2 KEYLESS SCRIPT</div>
+<textarea id="script4">loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/MM2KEYLESS/refs/heads/main/Loader"))()</textarea>
+<div class="buttons">
+<button class="copy-btn" onclick="copyScript('script4','count4',this)">Copy</button>
+<div class="counter">Copied: <span id="count4">0</span></div>
+</div>
+</div>
+
+<!-- DISCORD -->
+<div class="discord-section">
+<a href="https://discord.gg/4xjfyAn7g" target="_blank" class="discord-btn">
+Join Our Discord Server
+</a>
+</div>
+
+</div>
+
+<script>
+let counters = {
+    count1:0,
+    count2:0,
+    count3:0
+};
+
+function copyScript(id,countId,btn){
+    const text = document.getElementById(id).value;
+    navigator.clipboard.writeText(text);
+
+    counters[countId]++;
+    document.getElementById(countId).innerText = counters[countId];
+
+    btn.innerText = "Copied!";
+    btn.style.background = "linear-gradient(45deg,#00ff88,#00ffaa)";
+
+    setTimeout(()=>{
+        btn.innerText = "Copy";
+        btn.style.background = "linear-gradient(45deg,#ff00cc,#00ffff)";
+    },1500);
+}
+</script>
+
+</body>
+    </html>
+
+
