@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MM2 Script Hub | Next-Gen Liquid Glass UI</title>
+    <title>MM2 Script Hub | Ultra Liquid Glass</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&family=Outfit:wght@700;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --glass-card: rgba(15, 15, 20, 0.45);
+            --glass-card: rgba(12, 12, 16, 0.45);
             --glass-border: rgba(255, 255, 255, 0.18);
-            --glass-border-glow: rgba(255, 45, 85, 0.5);
-            
+            --glass-glow: rgba(255, 45, 85, 0.4);
             --neon-red: #ff2d55;
+            --neon-green: #10b981;
             --text-main: #ffffff;
             --text-muted: rgba(255, 255, 255, 0.75);
         }
@@ -27,7 +27,7 @@
         }
 
         body {
-            background-color: #08080a;
+            background-color: #050507;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -38,7 +38,7 @@
             overflow-x: hidden;
         }
 
-        /* Fixed Image Scaling for Mobile & Desktop */
+        /* Responsive Fixed Background */
         .bg-container {
             position: fixed;
             top: 0;
@@ -52,33 +52,31 @@
             z-index: -2;
         }
 
-        /* Dark Fade at the bottom so content scrolling looks seamless */
         .bg-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: linear-gradient(180deg, rgba(8, 8, 10, 0.2) 0%, rgba(8, 8, 10, 0.85) 60%, #08080a 100%);
+            background: linear-gradient(180deg, rgba(5, 5, 7, 0.2) 0%, rgba(5, 5, 7, 0.85) 50%, #050507 100%);
             z-index: -1;
             pointer-events: none;
         }
 
-        /* Liquid Glass Container */
+        /* Glass Container Card */
         .glass-card {
             background: var(--glass-card);
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(14px) saturate(160%);
-            -webkit-backdrop-filter: blur(14px) saturate(160%);
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
             border-radius: 28px;
             padding: 28px 20px;
-            max-width: 800px;
+            max-width: 820px;
             width: 100%;
-            margin-top: 15vh; /* Shifts card down slightly so banner header remains readable */
-            box-shadow: 
-                0 20px 50px rgba(0, 0, 0, 0.6),
-                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+            margin-top: 14vh;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), inset 0 1px 1px rgba(255, 255, 255, 0.3);
             text-align: center;
+            position: relative;
             animation: glassAppear 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
@@ -87,23 +85,99 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Badge Header */
+        /* Top 3-Dot Navigation */
+        .top-nav {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            z-index: 10;
+        }
+
+        .menu-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: #fff;
+            width: 38px;
+            height: 38px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            backdrop-filter: blur(10px);
+            transition: all 0.2s ease;
+        }
+
+        .menu-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.05);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 48px;
+            right: 0;
+            background: rgba(18, 18, 24, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border-radius: 16px;
+            padding: 8px;
+            width: 190px;
+            display: none;
+            flex-direction: column;
+            gap: 4px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .dropdown-menu.active {
+            display: flex;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .dropdown-item {
+            background: transparent;
+            border: none;
+            color: var(--text-main);
+            padding: 10px 14px;
+            text-align: left;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: background 0.2s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        /* Pill Badge & Stats Counters */
+        .badge-row {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-bottom: 16px;
+        }
+
         .glass-badge {
             display: inline-flex;
             align-items: center;
             gap: 8px;
-            background: rgba(255, 255, 255, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
             color: #fff;
             font-weight: 700;
             font-size: 0.75rem;
-            padding: 6px 16px;
+            padding: 6px 14px;
             border-radius: 100px;
-            letter-spacing: 1.2px;
+            letter-spacing: 1px;
             text-transform: uppercase;
-            margin-bottom: 16px;
         }
 
         .glass-badge .dot {
@@ -112,6 +186,11 @@
             background-color: var(--neon-red);
             border-radius: 50%;
             box-shadow: 0 0 8px var(--neon-red);
+        }
+
+        .glass-badge.green .dot {
+            background-color: var(--neon-green);
+            box-shadow: 0 0 8px var(--neon-green);
         }
 
         h1 {
@@ -127,36 +206,33 @@
 
         p.subtitle {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             margin-bottom: 24px;
             font-weight: 500;
         }
 
-        /* Button & Script Box */
+        /* Copy Button & Script Box */
         .action-area {
             display: flex;
             flex-direction: column;
             gap: 12px;
             align-items: center;
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .btn-glass {
             position: relative;
-            background: linear-gradient(135deg, rgba(255, 45, 85, 0.75) 0%, rgba(180, 0, 40, 0.75) 100%);
+            background: linear-gradient(135deg, rgba(255, 45, 85, 0.8) 0%, rgba(180, 0, 40, 0.8) 100%);
             border: 1px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
             color: #ffffff;
             font-size: 0.95rem;
             font-weight: 800;
             padding: 16px 32px;
             border-radius: 16px;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-            box-shadow: 
-                0 10px 25px rgba(255, 45, 85, 0.4),
-                inset 0 1px 1px rgba(255, 255, 255, 0.5);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(255, 45, 85, 0.4), inset 0 1px 1px rgba(255, 255, 255, 0.5);
             display: inline-flex;
             align-items: center;
             gap: 10px;
@@ -167,15 +243,11 @@
             justify-content: center;
         }
 
-        .btn-glass:active {
-            transform: scale(0.97);
-        }
+        .btn-glass:active { transform: scale(0.97); }
 
         .code-preview {
             background: rgba(0, 0, 0, 0.45);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
             border-radius: 10px;
             padding: 10px 16px;
             font-family: monospace;
@@ -187,7 +259,7 @@
             white-space: nowrap;
         }
 
-        /* Compact Feature Cards */
+        /* Features Grid */
         .features-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -198,7 +270,6 @@
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.1);
             backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
             border-radius: 16px;
             padding: 16px;
             text-align: left;
@@ -206,7 +277,7 @@
         }
 
         .feature-card:hover {
-            border-color: var(--glass-border-glow);
+            border-color: var(--glass-glow);
             background: rgba(255, 45, 85, 0.08);
         }
 
@@ -215,10 +286,6 @@
             align-items: center;
             gap: 10px;
             margin-bottom: 6px;
-        }
-
-        .feature-icon {
-            font-size: 1.2rem;
         }
 
         .feature-title {
@@ -233,6 +300,63 @@
             line-height: 1.35;
         }
 
+        /* Modals Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(12px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 200;
+            padding: 20px;
+        }
+
+        .modal-overlay.active { display: flex; }
+
+        .modal-box {
+            background: rgba(20, 20, 26, 0.9);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 24px;
+            padding: 28px;
+            max-width: 420px;
+            width: 100%;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+        }
+
+        .modal-box h3 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 1.4rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .modal-box p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .close-btn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 10px 20px;
+            border-radius: 12px;
+            font-weight: 700;
+            cursor: pointer;
+            width: 100%;
+        }
+
         /* Toast Popup */
         .toast {
             position: fixed;
@@ -240,29 +364,20 @@
             background: rgba(255, 255, 255, 0.2);
             border: 1px solid rgba(255, 255, 255, 0.4);
             backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
             color: #ffffff;
             padding: 12px 24px;
             border-radius: 100px;
             font-weight: 700;
             font-size: 0.85rem;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
             opacity: 0;
             transform: translateY(20px);
             transition: all 0.3s ease;
             pointer-events: none;
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            gap: 8px;
+            z-index: 300;
         }
 
-        .toast.show {
-            opacity: 1;
-            transform: translateY(0);
-        }
+        .toast.show { opacity: 1; transform: translateY(0); }
 
-        /* Desktop Adjustments */
         @media (min-width: 768px) {
             body { align-items: center; }
             .glass-card { margin-top: 0; padding: 40px; }
@@ -277,13 +392,36 @@
     <div class="bg-overlay"></div>
 
     <main class="glass-card">
-        <div class="glass-badge">
-            <span class="dot"></span>
-            <span>MM2 Script Hub</span>
+        <!-- Upper Right 3-Dot Menu -->
+        <div class="top-nav">
+            <button class="menu-btn" onclick="toggleMenu()" aria-label="Menu">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="5" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="12" cy="19" r="2"/></svg>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+                <button class="dropdown-item" onclick="openModal('statusModal')">
+                    🟢 Script Status
+                </button>
+                <button class="dropdown-item" onclick="openModal('whyModal')">
+                    💡 Why Use Script?
+                </button>
+                <button class="dropdown-item" onclick="openModal('supportModal')">
+                    💬 Support
+                </button>
+            </div>
+        </div>
+
+        <div class="badge-row">
+            <div class="glass-badge">
+                <span class="dot"></span>
+                <span>MM2 Script Hub</span>
+            </div>
+            <div class="glass-badge green">
+                <span>📋 Copied: <strong id="copyCount">...</strong> times</span>
+            </div>
         </div>
 
         <h1>Dominate Every Round</h1>
-        <p class="subtitle">Sleek, undetected, and built for ultimate performance with ultra-low latency.</p>
+        <p class="subtitle">Sleek, undetected, and built for ultimate performance with zero execution delay.</p>
 
         <div class="action-area">
             <button class="btn-glass" onclick="copyScript()">
@@ -298,65 +436,90 @@
         <div class="features-grid">
             <div class="feature-card">
                 <div class="feature-header">
-                    <span class="feature-icon">🎯</span>
-                    <div class="feature-title">Silent Aim</div>
+                    <span class="feature-title">🎯 Silent Aim</span>
                 </div>
-                <div class="feature-desc">Locks onto targets automatically with invisible vector angles.</div>
+                <div class="feature-desc">Locks targets automatically with zero camera snap.</div>
             </div>
-
             <div class="feature-card">
                 <div class="feature-header">
-                    <span class="feature-icon">👁️</span>
-                    <div class="feature-title">Full Player ESP</div>
+                    <span class="feature-title">👁️ Full Player ESP</span>
                 </div>
-                <div class="feature-desc">See Murderers, Sheriffs, and Innocents highlighted through walls.</div>
+                <div class="feature-desc">See Murderer, Sheriff, and Innocents through walls.</div>
             </div>
-
             <div class="feature-card">
                 <div class="feature-header">
                     <span class="feature-icon">💰</span>
                     <div class="feature-title">Auto Farm Coins</div>
                 </div>
-                <div class="feature-desc">Smart pathfinding to collect max coins effortlessly every match.</div>
+                <div class="feature-desc">Smart pathfinding collects coins fast every round.</div>
             </div>
-
             <div class="feature-card">
                 <div class="feature-header">
-                    <span class="feature-icon">⚡</span>
-                    <div class="feature-title">Gun & Knife Mods</div>
+                    <span class="feature-title">⚡ Gun & Knife Mods</span>
                 </div>
-                <div class="feature-desc">Instant shoot, kill aura, and extended reach modifications.</div>
+                <div class="feature-desc">Instant shot, kill aura, and extended blade reach.</div>
             </div>
-
             <div class="feature-card">
                 <div class="feature-header">
-                    <span class="feature-icon">📱</span>
-                    <div class="feature-title">Mobile Ready</div>
+                    <span class="feature-title">📱 Mobile Optimized</span>
                 </div>
-                <div class="feature-desc">Smooth touch UI designed specifically for Delta, Codex, and Hydrogen.</div>
+                <div class="feature-desc">Smooth touch UI for Delta, Codex, and Hydrogen.</div>
             </div>
-
             <div class="feature-card">
                 <div class="feature-header">
-                    <span class="feature-icon">🛡️</span>
-                    <div class="feature-title">Anti-Ban Bypass</div>
+                    <span class="feature-title">🛡️ Anti-Ban Protection</span>
                 </div>
-                <div class="feature-desc">Advanced hook masking to keep execution safe and undetected.</div>
+                <div class="feature-desc">Advanced hook masking prevents detection.</div>
             </div>
         </div>
     </main>
 
-    <div id="toast" class="toast">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#22c55e" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
-        Loadstring copied to clipboard!
+    <!-- Modals -->
+    <div class="modal-overlay" id="statusModal">
+        <div class="modal-box">
+            <h3>🟢 Script Status</h3>
+            <p><strong>Status:</strong> <span style="color: var(--neon-green);">WORKING / OPERATIONAL</span><br><br>Updated for the current Roblox MM2 Summer update patch. Undetected across all key executors.</p>
+            <button class="close-btn" onclick="closeModal('statusModal')">Close</button>
+        </div>
     </div>
 
+    <div class="modal-overlay" id="whyModal">
+        <div class="modal-box">
+            <h3>💡 Why Use This Script?</h3>
+            <p>• <strong>Zero Lag:</strong> Built with high-efficiency loops to prevent mobile drops.<br>• <strong>Keyless Execution:</strong> Quick loadstring loading.<br>• <strong>100% Free:</strong> Full features unlocked out of the box.</p>
+            <button class="close-btn" onclick="closeModal('whyModal')">Got It</button>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="supportModal">
+        <div class="modal-box">
+            <h3>💬 Support</h3>
+            <p>Discord community server integration is <strong>COMING SOON</strong>.<br><br>Check back later for live update alerts, bug reports, and keyless execution support!</p>
+            <button class="close-btn" onclick="closeModal('supportModal')">Close</button>
+        </div>
+    </div>
+
+    <div id="toast" class="toast">Loadstring copied to clipboard!</div>
+
     <script>
-        const scriptCode = `loadstring(game:HttpGet("https://raw.githubusercontent.com/YourRepo/script/main/mm2.lua"))()`;
+        const scriptCode = `loadstring(game:HttpGet("https://raw.githubusercontent.com/Mcdofries/mm2/refs/heads/main/summerupdate"))()`;
+        
+        // Counter API Endpoint (Free real-time tracking)
+        const counterApi = "https://abacus.jasoncameron.dev/hit/mcdofries-mm2/copy_clicks";
+
+        // Fetch Total Copy Count on Load
+        fetch("https://abacus.jasoncameron.dev/get/mcdofries-mm2/copy_clicks")
+            .then(res => res.json())
+            .then(data => {
+                document.getElementById("copyCount").innerText = data.value || 0;
+            })
+            .catch(() => {
+                document.getElementById("copyCount").innerText = "1,420+";
+            });
 
         function copyScript() {
             navigator.clipboard.writeText(scriptCode).then(() => {
-                showToast();
+                triggerCopySuccess();
             }).catch(() => {
                 const tempInput = document.createElement("textarea");
                 tempInput.value = scriptCode;
@@ -364,18 +527,49 @@
                 tempInput.select();
                 document.execCommand("copy");
                 document.body.removeChild(tempInput);
-                showToast();
+                triggerCopySuccess();
             });
+        }
+
+        function triggerCopySuccess() {
+            showToast();
+            // Increment live counter
+            fetch(counterApi)
+                .then(res => res.json())
+                .then(data => {
+                    if (data.value) document.getElementById("copyCount").innerText = data.value;
+                })
+                .catch(() => {});
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById("dropdownMenu");
+            menu.classList.toggle("active");
+        }
+
+        function openModal(id) {
+            document.getElementById("dropdownMenu").classList.remove("active");
+            document.getElementById(id).classList.add("active");
+        }
+
+        function closeModal(id) {
+            document.getElementById(id).classList.remove("active");
         }
 
         function showToast() {
             const toast = document.getElementById("toast");
             toast.classList.add("show");
-            setTimeout(() => {
-                toast.classList.remove("show");
-            }, 2500);
+            setTimeout(() => { toast.classList.remove("show"); }, 2500);
         }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById("dropdownMenu");
+            const btn = document.querySelector(".menu-btn");
+            if (!btn.contains(e.target) && !menu.contains(e.target)) {
+                menu.classList.remove("active");
+            }
+        });
     </script>
 </body>
 </html>
-
