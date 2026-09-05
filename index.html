@@ -3,368 +3,320 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EggSteal Hub — Next-Gen Scripting Framework</title>
+    <title>EGGSTEAL X — Enterprise Execution Engine</title>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #030712;
-            --card-bg: rgba(17, 24, 39, 0.7);
-            --card-border: rgba(255, 255, 255, 0.08);
-            --accent-cyan: #06b6d4;
-            --accent-purple: #8b5cf6;
-            --text-main: #f9fafb;
-            --text-muted: #9ca3af;
+            --bg: #030712;
+            --panel: rgba(15, 23, 42, 0.75);
+            --border: rgba(255, 255, 255, 0.08);
+            --cyan: #06b6d4;
+            --purple: #a855f7;
+            --pink: #ec4899;
+            --text: #f8fafc;
+            --muted: #94a3b8;
         }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-        }
+        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; user-select:none; }
+        body { background:var(--bg); color:var(--text); overflow-x:hidden; min-height:100vh; }
+        
+        .glow { position:fixed; width:600px; height:600px; background:radial-gradient(circle, rgba(168,85,247,0.15), rgba(6,182,212,0.1), transparent 70%); top:-200px; left:50%; transform:translateX(-50%); filter:blur(80px); pointer-events:none; z-index:0; }
+        #canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+        .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            overflow-x: hidden;
-            position: relative;
-            min-height: 100vh;
-        }
+        /* Header Navigation */
+        nav { display:flex; justify-content:space-between; align-items:center; padding:1.5rem 0; border-bottom:1px solid var(--border); }
+        .logo { font-size:1.25rem; font-weight:900; display:flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .nav-right { display:flex; align-items:center; gap:1rem; }
+        .status-badge { display:inline-flex; align-items:center; gap:0.5rem; background:rgba(34,197,94,0.1); color:#4ade80; border:1px solid rgba(34,197,94,0.2); padding:0.35rem 0.85rem; border-radius:9999px; font-size:0.75rem; font-weight:600; }
+        .status-dot { width:6px; height:6px; background:#4ade80; border-radius:50%; box-shadow:0 0 8px #4ade80; animation:pulse 2s infinite; }
+        .menu-btn { background:var(--panel); border:1px solid var(--border); color:var(--text); padding:0.6rem; border-radius:10px; cursor:pointer; display:flex; transition:all 0.2s; }
+        .menu-btn:hover { border-color:var(--cyan); }
 
-        /* Interactive Canvas Background */
-        #egg-canvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 0;
-            pointer-events: none;
-        }
+        /* Drawer / Slide Menu */
+        .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:90; }
+        .drawer-overlay.active { opacity:1; pointer-events:all; }
+        .drawer { position:fixed; top:0; right:-400px; width:100%; max-width:400px; height:100%; background:#090d16; border-left:1px solid var(--border); z-index:100; transition:right 0.3s ease; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; }
+        .drawer.active { right:0; }
+        .drawer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
+        .drawer-close { background:none; border:none; color:var(--muted); cursor:pointer; }
+        .drawer-links { display:flex; flex-direction:column; gap:1rem; }
+        .drawer-link { display:flex; align-items:center; gap:1rem; padding:1rem; border-radius:12px; color:var(--text); text-decoration:none; background:var(--panel); border:1px solid var(--border); transition:all 0.2s; }
+        .drawer-link:hover { border-color:var(--cyan); background:rgba(6,182,212,0.05); }
 
-        /* Main Container */
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 2rem;
-            position: relative;
-            z-index: 1;
-        }
+        /* Hero & Terminal */
+        .hero { text-align:center; padding:5rem 0 3rem; }
+        .hero h1 { font-size:clamp(2.5rem, 6vw, 4.2rem); font-weight:900; line-height:1.1; margin-bottom:1.25rem; background:linear-gradient(180deg, #fff 30%, #94a3b8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+        .hero p { font-size:1.1rem; color:var(--muted); max-width:650px; margin:0 auto 2.5rem; }
 
-        /* Navigation */
-        nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 2rem 0;
-            border-bottom: 1px solid var(--card-border);
-        }
+        .terminal-container { max-width:680px; margin:0 auto 5rem; background:rgba(10,15,30,0.85); border:1px solid rgba(255,255,255,0.12); border-radius:16px; backdrop-filter:blur(20px); box-shadow:0 25px 50px -12px rgba(0,0,0,0.7), 0 0 30px rgba(6,182,212,0.15); overflow:hidden; }
+        .terminal-header { background:rgba(255,255,255,0.03); padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
+        .terminal-dots { display:flex; gap:6px; }
+        .dot { width:10px; height:10px; border-radius:50%; }
+        .dot-red { background:#ef4444; } .dot-yellow { background:#f59e0b; } .dot-green { background:#10b981; }
+        .terminal-title { font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--muted); }
+        .terminal-body { padding:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
+        .script-text { font-family:'JetBrains Mono', monospace; color:var(--cyan); font-size:0.875rem; overflow-x:auto; white-space:nowrap; user-select:text; }
+        
+        .btn-copy { background:linear-gradient(135deg, var(--cyan), var(--purple)); color:#fff; border:none; padding:0.75rem 1.25rem; border-radius:10px; font-weight:700; font-size:0.875rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s; white-space:nowrap; }
+        .btn-copy:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(168,85,247,0.4); }
 
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
+        /* Metrics */
+        .metrics-banner { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:5rem; }
+        .metric-card { background:var(--panel); border:1px solid var(--border); padding:1.5rem; border-radius:16px; text-align:center; backdrop-filter:blur(12px); }
+        .metric-value { font-size:2rem; font-weight:900; font-family:'JetBrains Mono', monospace; margin-bottom:0.25rem; }
+        .metric-label { font-size:0.8rem; color:var(--muted); text-transform:uppercase; font-weight:600; }
 
-        .badge {
-            background: rgba(6, 182, 212, 0.1);
-            color: var(--accent-cyan);
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.75rem;
-            border: 1px solid rgba(6, 182, 212, 0.2);
-        }
+        /* Views (Tabs Architecture) */
+        .tab-view { display:none; animation:fadeIn 0.4s ease forwards; }
+        .tab-view.active { display:block; }
+        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
 
-        /* Hero Section */
-        .hero {
-            text-align: center;
-            padding: 6rem 0 4rem;
-        }
+        /* Features View Grid */
+        .section-header { text-align:center; margin-bottom:3rem; }
+        .section-title { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
+        .features-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; margin-bottom:5rem; }
+        .feature-card { background:var(--panel); border:1px solid var(--border); padding:2rem; border-radius:20px; backdrop-filter:blur(12px); transition:all 0.3s; }
+        .feature-card:hover { border-color:rgba(6,182,212,0.4); transform:translateY(-4px); }
+        .icon-box { width:44px; height:44px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--cyan); margin-bottom:1rem; }
+        .feature-card h3 { font-size:1.1rem; margin-bottom:0.5rem; }
+        .feature-card p { color:var(--muted); font-size:0.9rem; line-height:1.5; }
 
-        .hero h1 {
-            font-size: 4rem;
-            font-weight: 900;
-            line-height: 1.1;
-            margin-bottom: 1.5rem;
-            background: linear-gradient(to bottom, #ffffff, #94a3b8);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
+        /* Docs View Table */
+        .docs-container { background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:2rem; margin-bottom:5rem; }
+        .api-table { width:100%; border-collapse:collapse; margin-top:1.5rem; text-align:left; }
+        .api-table th, .api-table td { padding:1rem; border-bottom:1px solid var(--border); font-size:0.9rem; }
+        .api-table th { color:var(--muted); text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; }
+        .code-tag { font-family:'JetBrains Mono', monospace; background:rgba(6,182,212,0.1); color:var(--cyan); padding:0.2rem 0.5rem; border-radius:6px; font-size:0.8rem; }
 
-        .hero p {
-            font-size: 1.25rem;
-            color: var(--text-muted);
-            max-width: 600px;
-            margin: 0 auto 3rem;
-        }
+        /* Changelog / Patch Notes */
+        .changelog-list { display:flex; flex-direction:column; gap:1.5rem; margin-bottom:5rem; }
+        .changelog-item { background:var(--panel); border:1px solid var(--border); padding:1.5rem; border-radius:16px; }
+        .tag { display:inline-block; padding:0.25rem 0.6rem; border-radius:6px; font-size:0.75rem; font-weight:700; margin-bottom:0.75rem; }
+        .tag-v3 { background:rgba(168,85,247,0.2); color:var(--purple); border:1px solid rgba(168,85,247,0.4); }
 
-        /* Code Copy Box */
-        .script-box {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px);
-            border-radius: 12px;
-            padding: 1.5rem;
-            max-width: 700px;
-            margin: 0 auto 5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 1rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
-        }
+        /* Footer & Toast */
+        footer { border-top:1px solid var(--border); padding:2rem 0; display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:0.85rem; }
+        .toast { position:fixed; bottom:2rem; right:2rem; background:rgba(15,23,42,0.95); border:1px solid var(--cyan); color:var(--text); padding:1rem 1.5rem; border-radius:12px; display:flex; align-items:center; gap:0.75rem; transform:translateY(150%); transition:transform 0.3s; z-index:200; }
+        .toast.show { transform:translateY(0); }
 
-        .script-text {
-            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
-            color: var(--accent-cyan);
-            font-size: 0.95rem;
-            overflow-x: auto;
-            white-space: nowrap;
-        }
-
-        .copy-btn {
-            background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
-            color: #fff;
-            border: none;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            white-space: nowrap;
-        }
-
-        .copy-btn:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-        }
-
-        /* Features Grid */
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 1.5rem;
-            padding-bottom: 6rem;
-        }
-
-        .feature-card {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            backdrop-filter: blur(12px);
-            padding: 2rem;
-            border-radius: 16px;
-            transition: all 0.3s ease;
-        }
-
-        .feature-card:hover {
-            border-color: var(--accent-cyan);
-            transform: translateY(-5px);
-        }
-
-        .feature-icon {
-            font-size: 2rem;
-            margin-bottom: 1rem;
-        }
-
-        .feature-card h3 {
-            font-size: 1.25rem;
-            margin-bottom: 0.5rem;
-        }
-
-        .feature-card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
-        }
-
-        /* Footer */
-        footer {
-            border-top: 1px solid var(--card-border);
-            padding: 2rem 0;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-        }
-
-        /* Toast Notification */
-        .toast {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            background: var(--accent-cyan);
-            color: #000;
-            font-weight: 700;
-            padding: 1rem 1.5rem;
-            border-radius: 8px;
-            transform: translateY(150%);
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            z-index: 100;
-        }
-
-        .toast.show {
-            transform: translateY(0);
-        }
+        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+        @media(max-width:640px) { .terminal-body { flex-direction:column; align-items:stretch; } .btn-copy { justify-content:center; } }
     </style>
 </head>
 <body>
 
-    <canvas id="egg-canvas"></canvas>
+    <div class="glow"></div>
+    <canvas id="canvas"></canvas>
+
+    <div class="drawer-overlay" id="overlay" onclick="toggleMenu()"></div>
+    <div class="drawer" id="drawer">
+        <div>
+            <div class="drawer-header">
+                <div class="logo"><i data-lucide="egg"></i> EGGSTEAL X</div>
+                <button class="drawer-close" onclick="toggleMenu()"><i data-lucide="x"></i></button>
+            </div>
+            <div class="drawer-links">
+                <a href="#" class="drawer-link" onclick="switchTab('overview')"><i data-lucide="layout"></i> Main Hub</a>
+                <a href="#" class="drawer-link" onclick="switchTab('features')"><i data-lucide="zap"></i> Modules & Features</a>
+                <a href="#" class="drawer-link" onclick="switchTab('docs')"><i data-lucide="code"></i> API & Documentation</a>
+                <a href="#" class="drawer-link" onclick="switchTab('changelog')"><i data-lucide="git-branch"></i> Patch Notes</a>
+            </div>
+        </div>
+        <div style="color:var(--muted); font-size:0.8rem; text-align:center;">
+            Logged in as <span style="color:var(--cyan);">Guest Executor</span>
+        </div>
+    </div>
 
     <div class="container">
         <nav>
-            <div class="logo">
-                🥚 EGGSTEAL <span class="badge">v2.4 Ultra</span>
+            <div class="logo"><i data-lucide="egg"></i> EGGSTEAL X</div>
+            <div class="nav-right">
+                <div class="status-badge"><span class="status-dot"></span> Online (v3.2)</div>
+                <button class="menu-btn" onclick="toggleMenu()" aria-label="Open Drawer Navigation"><i data-lucide="menu"></i></button>
             </div>
         </nav>
 
-        <section class="hero">
-            <h1>DOMINATE THE GAME<br>IN A SINGLE CLICK</h1>
-            <p>High-performance, bypass-ready execution framework built for speed, safety, and total automation.</p>
+        <div id="tab-overview" class="tab-view active">
+            <section class="hero">
+                <h1>AUTOMATED EGG HARVESTING.<br>REDEFINED FOR SPEED.</h1>
+                <p>Enterprise execution architecture featuring sub-frame interaction rates, instant proximity bypass, and dynamic cloud hook modules.</p>
 
-            <div class="script-box">
-                <div class="script-text" id="scriptCode">loadstring(game:HttpGet("https://raw.githubusercontent.com/eggsteal/main/script.lua"))()</div>
-                <button class="copy-btn" onclick="copyScript()">Copy Script</button>
-            </div>
-        </section>
+                <div class="terminal-container">
+                    <div class="terminal-header">
+                        <div class="terminal-dots">
+                            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
+                        </div>
+                        <div class="terminal-title">bash — loader.lua</div>
+                        <i data-lucide="terminal" style="width:14px; height:14px; color:var(--muted);"></i>
+                    </div>
+                    <div class="terminal-body">
+                        <div class="script-text" id="scriptCode">loadstring(game:HttpGet("https://cdn.eggsteal.io/v3/loader.lua"))()</div>
+                        <button class="btn-copy" onclick="copyScript()">
+                            <i data-lucide="copy" style="width:16px; height:16px;"></i>
+                            <span>Copy Script</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
 
-        <section class="features-grid">
-            <div class="feature-card">
-                <div class="feature-icon">⚡</div>
-                <h3>Instant Steal</h3>
-                <p>Zero-frame latency grabbing engine. Teleports and loots target eggs before the server updates proximity prompts.</p>
+            <div class="metrics-banner">
+                <div class="metric-card"><div class="metric-value" id="counter">842,910</div><div class="metric-label">Eggs Harvested</div></div>
+                <div class="metric-card"><div class="metric-value" style="color:var(--cyan);">0.02ms</div><div class="metric-label">Avg Execution Latency</div></div>
+                <div class="metric-card"><div class="metric-value" style="color:#4ade80;">100%</div><div class="metric-label">Anti-Cheat Safety</div></div>
+                <div class="metric-card"><div class="metric-value">18.4K</div><div class="metric-label">Active Lobbies</div></div>
             </div>
-            <div class="feature-card">
-                <div class="feature-icon">🛡️</div>
-                <h3>Anti-Detection Bypass</h3>
-                <p>Built-in memory obfuscation and dynamic request throttling to keep your execution completely undetected.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🎯</div>
-                <h3>Auto-Targeting ESP</h3>
-                <p>Visual markers and automated pathfinding prioritized by egg rarity, value, and distance.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🔄</div>
-                <h3>Server Hop & Auto-Farm</h3>
-                <p>Automatically rotates active servers the moment high-tier eggs are exhausted in your current lobby.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">⚙️</div>
-                <h3>Custom Feature Injector</h3>
-                <p>Modular hook system allowing you to load custom scripts and custom lua modules seamlessly.</p>
-            </div>
-            <div class="feature-card">
-                <div class="feature-icon">🌐</div>
-                <h3>Cloud Sync Configs</h3>
-                <p>Save your preferred settings directly to the cloud and load them instantly across any device or client.</p>
-            </div>
-        </section>
+        </div>
+
+        <div id="tab-features" class="tab-view">
+            <section style="padding: 3rem 0;">
+                <div class="section-header">
+                    <h2 class="section-title">Execution Capabilities</h2>
+                    <p style="color:var(--muted)">Full breakdown of core modules packaged into EggSteal X.</p>
+                </div>
+                <div class="features-grid">
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="zap"></i></div><h3>Instant Proximity Steal</h3><p>Bypasses server interaction delays to steal target eggs before proximity prompts trigger for other players.</p></div>
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="shield"></i></div><h3>Memory Masking</h3><p>Dynamic thread protection and hook obfuscation keep client scripts isolated from automated detection.</p></div>
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="eye"></i></div><h3>Visual Target ESP</h3><p>Color-coded overlays that highlight legendary and mythical eggs across the map through walls.</p></div>
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="refresh-cw"></i></div><h3>Smart Server Hop</h3><p>Automatically hops active lobbies the moment target egg respawn timers exceed efficiency thresholds.</p></div>
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="code"></i></div><h3>Custom Lua Injector</h3><p>Load external modules or personal macros alongside the main runtime engine seamlessly.</p></div>
+                    <div class="feature-card"><div class="icon-box"><i data-lucide="cloud"></i></div><h3>Cloud Config Sync</h3><p>Sync keybinds, targeting priority profiles, and UI layouts instantly across multiple clients.</p></div>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-docs" class="tab-view">
+            <section style="padding: 3rem 0;">
+                <div class="section-header">
+                    <h2 class="section-title">Developer Documentation</h2>
+                    <p style="color:var(--muted)">API Methods available for custom module creation.</p>
+                </div>
+                <div class="docs-container">
+                    <table class="api-table">
+                        <thead>
+                            <tr><th>Method</th><th>Parameters</th><th>Description</th></tr>
+                        </thead>
+                        <tbody>
+                            <tr><td><span class="code-tag">EggSteal:StealTarget(id)</span></td><td>Target ID (String)</td><td>Force-executes instant pickup on specific egg entity.</td></tr>
+                            <tr><td><span class="code-tag">EggSteal:SetFilter(rarity)</span></td><td>Rarity (Array)</td><td>Filters ESP and auto-pickup to designated rarities.</td></tr>
+                            <tr><td><span class="code-tag">EggSteal:ToggleBypass(bool)</span></td><td>State (Boolean)</td><td>Enables or disables memory obfuscation wrapper.</td></tr>
+                            <tr><td><span class="code-tag">EggSteal:ServerHop()</span></td><td>None</td><td>Initiates immediate migration to an uncrowded server.</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </div>
+
+        <div id="tab-changelog" class="tab-view">
+            <section style="padding: 3rem 0;">
+                <div class="section-header">
+                    <h2 class="section-title">Patch Notes & Updates</h2>
+                    <p style="color:var(--muted)">Stay up to date with continuous execution enhancements.</p>
+                </div>
+                <div class="changelog-list">
+                    <div class="changelog-item">
+                        <span class="tag tag-v3">v3.2.0 — Latest</span>
+                        <h3>Bypass Framework Update</h3>
+                        <p style="color:var(--muted); margin-top:0.5rem; font-size:0.9rem;">Updated proximity hooks for latest game updates. Reduced execution latency by 15% across all network configurations.</p>
+                    </div>
+                    <div class="changelog-item">
+                        <span class="tag tag-v3" style="background:rgba(6,182,212,0.2); color:var(--cyan); border-color:rgba(6,182,212,0.4);">v3.1.0</span>
+                        <h3>Cloud Config Engine Added</h3>
+                        <p style="color:var(--muted); margin-top:0.5rem; font-size:0.9rem;">Introduced cross-session profile storage and automatic server hopping algorithm optimizations.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
 
         <footer>
-            &copy; 2026 EggSteal Framework. Designed for high performance.
+            <div>&copy; 2026 EGGSTEAL X Engine. All rights reserved.</div>
+            <div style="display:flex; gap:1.5rem;">
+                <a href="#" style="color:var(--muted); text-decoration:none;" onclick="switchTab('docs')">Docs</a>
+                <a href="#" style="color:var(--muted); text-decoration:none;" onclick="switchTab('changelog')">Changelog</a>
+            </div>
         </footer>
     </div>
 
-    <div class="toast" id="toast">Copied to clipboard!</div>
+    <div class="toast" id="toast">
+        <i data-lucide="check-circle-2" style="color:#4ade80; width:20px; height:20px;"></i>
+        <span>Script copied to clipboard!</span>
+    </div>
 
     <script>
-        // Interactive Animated Egg Background
-        const canvas = document.getElementById('egg-canvas');
+        lucide.createIcons();
+
+        // Drawer Menu Toggle
+        function toggleMenu() {
+            document.getElementById('drawer').classList.toggle('active');
+            document.getElementById('overlay').classList.toggle('active');
+        }
+
+        // Tab Switching System
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
+            const target = document.getElementById(`tab-${tabName}`);
+            if (target) target.classList.add('active');
+            
+            // Close drawer menu if open
+            document.getElementById('drawer').classList.remove('active');
+            document.getElementById('overlay').classList.remove('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Script Copying
+        function copyScript() {
+            const script = document.getElementById('scriptCode').innerText;
+            navigator.clipboard.writeText(script).then(() => {
+                const toast = document.getElementById('toast');
+                toast.classList.add('show');
+                setTimeout(() => toast.classList.remove('show'), 2500);
+            });
+        }
+
+        // Live Counter Animation
+        let count = 842910;
+        setInterval(() => {
+            count += Math.floor(Math.random() * 3) + 1;
+            document.getElementById('counter').innerText = count.toLocaleString();
+        }, 2000);
+
+        // Canvas Physics Animation
+        const canvas = document.getElementById('canvas');
         const ctx = canvas.getContext('2d');
+        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+        resize(); window.addEventListener('resize', resize);
 
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
-
-        const eggs = [];
-        const mouse = { x: null, y: null, radius: 150 };
-
-        window.addEventListener('mousemove', (e) => {
-            mouse.x = e.x;
-            mouse.y = e.y;
-        });
-
-        class FloatingEgg {
-            constructor() {
-                this.x = Math.random() * canvas.width;
-                this.y = Math.random() * canvas.height;
-                this.size = Math.random() * 15 + 10;
-                this.speedX = (Math.random() - 0.5) * 0.8;
-                this.speedY = (Math.random() - 0.5) * 0.8;
-                this.opacity = Math.random() * 0.3 + 0.1;
-                this.angle = Math.random() * Math.PI * 2;
-            }
-
-            draw() {
-                ctx.save();
-                ctx.translate(this.x, this.y);
-                ctx.rotate(this.angle);
-                ctx.beginPath();
-                // Draw egg shape using Bezier curves
-                ctx.ellipse(0, 0, this.size * 0.75, this.size, 0, 0, Math.PI * 2);
-                ctx.fillStyle = `rgba(6, 182, 212, ${this.opacity})`;
-                ctx.strokeStyle = `rgba(139, 92, 246, ${this.opacity + 0.2})`;
-                ctx.lineWidth = 1.5;
-                ctx.fill();
-                ctx.stroke();
-                ctx.restore();
-            }
-
-            update() {
-                this.x += this.speedX;
-                this.y += this.speedY;
-
-                // Bounce off edges
-                if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-                if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-
-                // Mouse interaction / evasion
-                if (mouse.x && mouse.y) {
-                    let dx = mouse.x - this.x;
-                    let dy = mouse.y - this.y;
-                    let distance = Math.sqrt(dx * dx + dy * dy);
-                    if (distance < mouse.radius) {
-                        let force = (mouse.radius - distance) / mouse.radius;
-                        this.x -= (dx / distance) * force * 3;
-                        this.y -= (dy / distance) * force * 3;
-                    }
-                }
-            }
-        }
-
-        // Initialize particles
-        for (let i = 0; i < 40; i++) {
-            eggs.push(new FloatingEgg());
-        }
+        const eggs = Array.from({ length: 40 }, () => ({
+            x: Math.random() * canvas.width,
+            y: Math.random() * canvas.height,
+            size: Math.random() * 14 + 10,
+            vx: (Math.random() - 0.5) * 0.6,
+            vy: (Math.random() - 0.5) * 0.6,
+            rot: Math.random() * Math.PI * 2
+        }));
 
         function animate() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            eggs.forEach(egg => {
-                egg.update();
-                egg.draw();
+            eggs.forEach(e => {
+                e.x += e.vx; e.y += e.vy;
+                if (e.x < 0 || e.x > canvas.width) e.vx *= -1;
+                if (e.y < 0 || e.y > canvas.height) e.vy *= -1;
+
+                ctx.save();
+                ctx.translate(e.x, e.y);
+                ctx.rotate(e.rot);
+                ctx.beginPath();
+                ctx.ellipse(0, 0, e.size * 0.7, e.size, 0, 0, Math.PI * 2);
+                ctx.fillStyle = 'rgba(6, 182, 212, 0.15)';
+                ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)';
+                ctx.lineWidth = 1;
+                ctx.fill(); ctx.stroke();
+                ctx.restore();
             });
             requestAnimationFrame(animate);
         }
         animate();
-
-        // Copy Script Function
-        function copyScript() {
-            const scriptText = document.getElementById('scriptCode').innerText;
-            navigator.clipboard.writeText(scriptText).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => {
-                    toast.classList.remove('show');
-                }, 2000);
-            });
-        }
     </script>
 </body>
 </html>
