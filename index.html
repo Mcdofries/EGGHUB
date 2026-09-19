@@ -1,322 +1,631 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EGGSTEAL X — Enterprise Execution Engine</title>
-    <script src="https://unpkg.com/lucide@latest"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800;900&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --bg: #030712;
-            --panel: rgba(15, 23, 42, 0.75);
-            --border: rgba(255, 255, 255, 0.08);
-            --cyan: #06b6d4;
-            --purple: #a855f7;
-            --pink: #ec4899;
-            --text: #f8fafc;
-            --muted: #94a3b8;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Vortex Hub — Premier MM2 Roblox Script</title>
+  
+  <!-- Fonts & Icons -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
 
-        * { margin:0; padding:0; box-sizing:border-box; font-family:'Plus Jakarta Sans',sans-serif; user-select:none; }
-        body { background:var(--bg); color:var(--text); overflow-x:hidden; min-height:100vh; }
-        
-        .glow { position:fixed; width:600px; height:600px; background:radial-gradient(circle, rgba(168,85,247,0.15), rgba(6,182,212,0.1), transparent 70%); top:-200px; left:50%; transform:translateX(-50%); filter:blur(80px); pointer-events:none; z-index:0; }
-        #canvas { position:fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
-        .container { max-width:1200px; margin:0 auto; padding:0 1.5rem; position:relative; z-index:1; }
+  <style>
+    :root {
+      --bg: #090a0f;
+      --card-bg: rgba(18, 20, 29, 0.65);
+      --card-border: rgba(255, 255, 255, 0.08);
+      --accent: #7c3aed;
+      --accent-glow: rgba(124, 58, 237, 0.35);
+      --accent-hover: #6d28d9;
+      --text: #f3f4f6;
+      --text-muted: #9ca3af;
+      --success: #10b981;
+    }
 
-        /* Header Navigation */
-        nav { display:flex; justify-content:space-between; align-items:center; padding:1.5rem 0; border-bottom:1px solid var(--border); }
-        .logo { font-size:1.25rem; font-weight:900; display:flex; align-items:center; gap:0.5rem; background:linear-gradient(135deg, var(--cyan), var(--purple)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .nav-right { display:flex; align-items:center; gap:1rem; }
-        .status-badge { display:inline-flex; align-items:center; gap:0.5rem; background:rgba(34,197,94,0.1); color:#4ade80; border:1px solid rgba(34,197,94,0.2); padding:0.35rem 0.85rem; border-radius:9999px; font-size:0.75rem; font-weight:600; }
-        .status-dot { width:6px; height:6px; background:#4ade80; border-radius:50%; box-shadow:0 0 8px #4ade80; animation:pulse 2s infinite; }
-        .menu-btn { background:var(--panel); border:1px solid var(--border); color:var(--text); padding:0.6rem; border-radius:10px; cursor:pointer; display:flex; transition:all 0.2s; }
-        .menu-btn:hover { border-color:var(--cyan); }
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      -webkit-tap-highlight-color: transparent;
+    }
 
-        /* Drawer / Slide Menu */
-        .drawer-overlay { position:fixed; inset:0; background:rgba(0,0,0,0.7); backdrop-filter:blur(8px); opacity:0; pointer-events:none; transition:opacity 0.3s; z-index:90; }
-        .drawer-overlay.active { opacity:1; pointer-events:all; }
-        .drawer { position:fixed; top:0; right:-400px; width:100%; max-width:400px; height:100%; background:#090d16; border-left:1px solid var(--border); z-index:100; transition:right 0.3s ease; padding:2rem; display:flex; flex-direction:column; justify-content:space-between; }
-        .drawer.active { right:0; }
-        .drawer-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:2rem; }
-        .drawer-close { background:none; border:none; color:var(--muted); cursor:pointer; }
-        .drawer-links { display:flex; flex-direction:column; gap:1rem; }
-        .drawer-link { display:flex; align-items:center; gap:1rem; padding:1rem; border-radius:12px; color:var(--text); text-decoration:none; background:var(--panel); border:1px solid var(--border); transition:all 0.2s; }
-        .drawer-link:hover { border-color:var(--cyan); background:rgba(6,182,212,0.05); }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+      min-height: 100vh;
+      position: relative;
+    }
 
-        /* Hero & Terminal */
-        .hero { text-align:center; padding:5rem 0 3rem; }
-        .hero h1 { font-size:clamp(2.5rem, 6vw, 4.2rem); font-weight:900; line-height:1.1; margin-bottom:1.25rem; background:linear-gradient(180deg, #fff 30%, #94a3b8); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
-        .hero p { font-size:1.1rem; color:var(--muted); max-width:650px; margin:0 auto 2.5rem; }
+    /* Subtle background glow effect */
+    .bg-glow {
+      position: fixed;
+      top: -200px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 600px;
+      height: 600px;
+      background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+      pointer-events: none;
+      z-index: 0;
+      filter: blur(80px);
+    }
 
-        .terminal-container { max-width:680px; margin:0 auto 5rem; background:rgba(10,15,30,0.85); border:1px solid rgba(255,255,255,0.12); border-radius:16px; backdrop-filter:blur(20px); box-shadow:0 25px 50px -12px rgba(0,0,0,0.7), 0 0 30px rgba(6,182,212,0.15); overflow:hidden; }
-        .terminal-header { background:rgba(255,255,255,0.03); padding:0.75rem 1rem; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid var(--border); }
-        .terminal-dots { display:flex; gap:6px; }
-        .dot { width:10px; height:10px; border-radius:50%; }
-        .dot-red { background:#ef4444; } .dot-yellow { background:#f59e0b; } .dot-green { background:#10b981; }
-        .terminal-title { font-family:'JetBrains Mono', monospace; font-size:0.75rem; color:var(--muted); }
-        .terminal-body { padding:1.25rem; display:flex; align-items:center; justify-content:space-between; gap:1rem; }
-        .script-text { font-family:'JetBrains Mono', monospace; color:var(--cyan); font-size:0.875rem; overflow-x:auto; white-space:nowrap; user-select:text; }
-        
-        .btn-copy { background:linear-gradient(135deg, var(--cyan), var(--purple)); color:#fff; border:none; padding:0.75rem 1.25rem; border-radius:10px; font-weight:700; font-size:0.875rem; cursor:pointer; display:flex; align-items:center; gap:0.5rem; transition:all 0.2s; white-space:nowrap; }
-        .btn-copy:hover { transform:translateY(-2px); box-shadow:0 6px 20px rgba(168,85,247,0.4); }
+    /* Header / Nav */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      background: rgba(9, 10, 15, 0.7);
+      border-bottom: 1px solid var(--card-border);
+    }
 
-        /* Metrics */
-        .metrics-banner { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px, 1fr)); gap:1rem; margin-bottom:5rem; }
-        .metric-card { background:var(--panel); border:1px solid var(--border); padding:1.5rem; border-radius:16px; text-align:center; backdrop-filter:blur(12px); }
-        .metric-value { font-size:2rem; font-weight:900; font-family:'JetBrains Mono', monospace; margin-bottom:0.25rem; }
-        .metric-label { font-size:0.8rem; color:var(--muted); text-transform:uppercase; font-weight:600; }
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 1rem 1.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-        /* Views (Tabs Architecture) */
-        .tab-view { display:none; animation:fadeIn 0.4s ease forwards; }
-        .tab-view.active { display:block; }
-        @keyframes fadeIn { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -0.5px;
+      color: #fff;
+    }
 
-        /* Features View Grid */
-        .section-header { text-align:center; margin-bottom:3rem; }
-        .section-title { font-size:2rem; font-weight:800; margin-bottom:0.5rem; }
-        .features-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(300px, 1fr)); gap:1.5rem; margin-bottom:5rem; }
-        .feature-card { background:var(--panel); border:1px solid var(--border); padding:2rem; border-radius:20px; backdrop-filter:blur(12px); transition:all 0.3s; }
-        .feature-card:hover { border-color:rgba(6,182,212,0.4); transform:translateY(-4px); }
-        .icon-box { width:44px; height:44px; background:rgba(255,255,255,0.05); border:1px solid var(--border); border-radius:12px; display:flex; align-items:center; justify-content:center; color:var(--cyan); margin-bottom:1rem; }
-        .feature-card h3 { font-size:1.1rem; margin-bottom:0.5rem; }
-        .feature-card p { color:var(--muted); font-size:0.9rem; line-height:1.5; }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, var(--accent), #4f46e5);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 4px 12px var(--accent-glow);
+    }
 
-        /* Docs View Table */
-        .docs-container { background:var(--panel); border:1px solid var(--border); border-radius:20px; padding:2rem; margin-bottom:5rem; }
-        .api-table { width:100%; border-collapse:collapse; margin-top:1.5rem; text-align:left; }
-        .api-table th, .api-table td { padding:1rem; border-bottom:1px solid var(--border); font-size:0.9rem; }
-        .api-table th { color:var(--muted); text-transform:uppercase; font-size:0.75rem; letter-spacing:0.05em; }
-        .code-tag { font-family:'JetBrains Mono', monospace; background:rgba(6,182,212,0.1); color:var(--cyan); padding:0.2rem 0.5rem; border-radius:6px; font-size:0.8rem; }
+    /* 3-Dots Menu Trigger */
+    .menu-dropdown-wrapper {
+      position: relative;
+    }
 
-        /* Changelog / Patch Notes */
-        .changelog-list { display:flex; flex-direction:column; gap:1.5rem; margin-bottom:5rem; }
-        .changelog-item { background:var(--panel); border:1px solid var(--border); padding:1.5rem; border-radius:16px; }
-        .tag { display:inline-block; padding:0.25rem 0.6rem; border-radius:6px; font-size:0.75rem; font-weight:700; margin-bottom:0.75rem; }
-        .tag-v3 { background:rgba(168,85,247,0.2); color:var(--purple); border:1px solid rgba(168,85,247,0.4); }
+    .dots-btn {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      color: var(--text);
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
 
-        /* Footer & Toast */
-        footer { border-top:1px solid var(--border); padding:2rem 0; display:flex; justify-content:space-between; align-items:center; color:var(--muted); font-size:0.85rem; }
-        .toast { position:fixed; bottom:2rem; right:2rem; background:rgba(15,23,42,0.95); border:1px solid var(--cyan); color:var(--text); padding:1rem 1.5rem; border-radius:12px; display:flex; align-items:center; gap:0.75rem; transform:translateY(150%); transition:transform 0.3s; z-index:200; }
-        .toast.show { transform:translateY(0); }
+    .dots-btn:hover {
+      background: rgba(255, 255, 255, 0.08);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
 
-        @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
-        @media(max-width:640px) { .terminal-body { flex-direction:column; align-items:stretch; } .btn-copy { justify-content:center; } }
-    </style>
+    /* Dropdown Content */
+    .dropdown-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 10px);
+      width: 220px;
+      background: #12141d;
+      border: 1px solid var(--card-border);
+      border-radius: 12px;
+      padding: 0.5rem;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
+      z-index: 200;
+      transform-origin: top right;
+      animation: menuFade 0.2s ease;
+    }
+
+    .dropdown-menu.active {
+      display: flex;
+    }
+
+    @keyframes menuFade {
+      from { opacity: 0; transform: scale(0.95); }
+      to { opacity: 1; transform: scale(1); }
+    }
+
+    .dropdown-item {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      padding: 0.6rem 0.8rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border-radius: 8px;
+      transition: all 0.2s ease;
+      cursor: pointer;
+      border: none;
+      background: transparent;
+      width: 100%;
+      text-align: left;
+    }
+
+    .dropdown-item:hover {
+      background: rgba(255, 255, 255, 0.05);
+      color: #fff;
+    }
+
+    /* Hero Section */
+    .hero {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 4rem 1.5rem 3rem;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      background: rgba(124, 58, 237, 0.12);
+      border: 1px solid rgba(124, 58, 237, 0.3);
+      border-radius: 99px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: #a78bfa;
+      margin-bottom: 1.5rem;
+    }
+
+    .badge-dot {
+      width: 6px;
+      height: 6px;
+      background-color: var(--success);
+      border-radius: 50%;
+    }
+
+    .hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 800;
+      line-height: 1.15;
+      margin-bottom: 1.2rem;
+      letter-spacing: -1px;
+    }
+
+    .hero h1 span {
+      background: linear-gradient(135deg, #a78bfa, #c084fc);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: clamp(1rem, 2vw, 1.15rem);
+      color: var(--text-muted);
+      max-width: 600px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.6;
+    }
+
+    /* Get Script Action Section */
+    .action-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 650px;
+      margin: 0 auto;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    }
+
+    .script-box {
+      background: rgba(0, 0, 0, 0.4);
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      margin-bottom: 1rem;
+    }
+
+    .script-code {
+      font-family: monospace;
+      font-size: 0.85rem;
+      color: #a78bfa;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      padding: 0.85rem 1.5rem;
+      border-radius: 10px;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      transition: all 0.2s ease;
+      width: 100%;
+      box-shadow: 0 4px 14px var(--accent-glow);
+    }
+
+    .btn-primary:hover {
+      background: var(--accent-hover);
+      transform: translateY(-1px);
+    }
+
+    .btn-primary:active {
+      transform: translateY(0);
+    }
+
+    /* Features Section */
+    .features-section {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 4rem auto;
+      padding: 0 1.5rem;
+    }
+
+    .section-title {
+      text-align: center;
+      margin-bottom: 2.5rem;
+    }
+
+    .section-title h2 {
+      font-size: 1.75rem;
+      font-weight: 700;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+    }
+
+    .feature-card {
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      border-radius: 14px;
+      padding: 1.5rem;
+      transition: border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .feature-card:hover {
+      border-color: rgba(255, 255, 255, 0.18);
+      transform: translateY(-2px);
+    }
+
+    .feature-icon {
+      width: 42px;
+      height: 42px;
+      background: rgba(124, 58, 237, 0.1);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #a78bfa;
+      margin-bottom: 1rem;
+    }
+
+    .feature-card h3 {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.4rem;
+    }
+
+    .feature-card p {
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      line-height: 1.5;
+    }
+
+    /* Modal for Fun Fact / Support */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: rgba(0, 0, 0, 0.7);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #12141d;
+      border: 1px solid var(--card-border);
+      border-radius: 16px;
+      padding: 1.5rem;
+      max-width: 420px;
+      width: 100%;
+      position: relative;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .modal-header h3 {
+      font-size: 1.1rem;
+      font-weight: 700;
+    }
+
+    .close-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    .modal-body {
+      color: var(--text-muted);
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    /* Toast Notification */
+    .toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background: #10b981;
+      color: #fff;
+      padding: 0.75rem 1.25rem;
+      border-radius: 10px;
+      font-size: 0.875rem;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: 0 10px 20px rgba(0,0,0,0.3);
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    footer {
+      text-align: center;
+      padding: 2rem 1.5rem;
+      color: var(--text-muted);
+      font-size: 0.8rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 4rem;
+    }
+  </style>
 </head>
 <body>
 
-    <div class="glow"></div>
-    <canvas id="canvas"></canvas>
+  <div class="bg-glow"></div>
 
-    <div class="drawer-overlay" id="overlay" onclick="toggleMenu()"></div>
-    <div class="drawer" id="drawer">
-        <div>
-            <div class="drawer-header">
-                <div class="logo"><i data-lucide="egg"></i> EGGSTEAL X</div>
-                <button class="drawer-close" onclick="toggleMenu()"><i data-lucide="x"></i></button>
-            </div>
-            <div class="drawer-links">
-                <a href="#" class="drawer-link" onclick="switchTab('overview')"><i data-lucide="layout"></i> Main Hub</a>
-                <a href="#" class="drawer-link" onclick="switchTab('features')"><i data-lucide="zap"></i> Modules & Features</a>
-                <a href="#" class="drawer-link" onclick="switchTab('docs')"><i data-lucide="code"></i> API & Documentation</a>
-                <a href="#" class="drawer-link" onclick="switchTab('changelog')"><i data-lucide="git-branch"></i> Patch Notes</a>
-            </div>
+  <!-- Header -->
+  <header>
+    <div class="nav-container">
+      <div class="logo">
+        <div class="logo-icon"><i data-lucide="zap" size="18" color="#fff"></i></div>
+        <span>Vortex Hub</span>
+      </div>
+
+      <!-- 3-Dots Dropdown -->
+      <div class="menu-dropdown-wrapper">
+        <button class="dots-btn" id="dotsBtn" aria-label="Menu">
+          <i data-lucide="more-vertical" size="18"></i>
+        </button>
+        <div class="dropdown-menu" id="dropdownMenu">
+          <button class="dropdown-item" id="factOption">
+            <i data-lucide="sparkles" size="16"></i> Fun Fact
+          </button>
+          <button class="dropdown-item" id="supportOption">
+            <i data-lucide="help-circle" size="16"></i> Support & FAQ
+          </button>
+          <a href="https://discord.gg" target="_blank" class="dropdown-item">
+            <i data-lucide="message-square" size="16"></i> Discord Community
+          </a>
         </div>
-        <div style="color:var(--muted); font-size:0.8rem; text-align:center;">
-            Logged in as <span style="color:var(--cyan);">Guest Executor</span>
-        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="badge">
+      <span class="badge-dot"></span> Undetected & Updated for MM2
+    </div>
+    <h1>Dominate Murder Mystery 2<br><span>Clean, Fast & Powerful.</span></h1>
+    <p>Enhance your gameplay with zero lag, seamless ESP, custom autofarm, and complete cross-executor support for Mobile and PC.</p>
+
+    <div class="action-card">
+      <div class="script-box">
+        <span class="script-code" id="scriptText">loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/a0945a88b49491f8579aced6aed3023685edc892f121167e8c576b37d05a4c68/download"))()</span>
+        <i data-lucide="code" size="16" style="color: var(--text-muted); flex-shrink: 0;"></i>
+      </div>
+      <button class="btn-primary" id="copyBtn">
+        <i data-lucide="copy" size="18"></i> Copy Script
+      </button>
+    </div>
+  </section>
+
+  <!-- Features Grid -->
+  <section class="features-section">
+    <div class="section-title">
+      <h2>Script Features</h2>
     </div>
 
-    <div class="container">
-        <nav>
-            <div class="logo"><i data-lucide="egg"></i> EGGSTEAL X</div>
-            <div class="nav-right">
-                <div class="status-badge"><span class="status-dot"></span> Online (v3.2)</div>
-                <button class="menu-btn" onclick="toggleMenu()" aria-label="Open Drawer Navigation"><i data-lucide="menu"></i></button>
-            </div>
-        </nav>
+    <div class="grid">
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="eye" size="20"></i></div>
+        <h3>Full Player & Role ESP</h3>
+        <p>Instantly highlight Murderer, Sheriff, and Innocent roles through walls with color customization.</p>
+      </div>
 
-        <div id="tab-overview" class="tab-view active">
-            <section class="hero">
-                <h1>AUTOMATED EGG HARVESTING.<br>REDEFINED FOR SPEED.</h1>
-                <p>Enterprise execution architecture featuring sub-frame interaction rates, instant proximity bypass, and dynamic cloud hook modules.</p>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="coins" size="20"></i></div>
+        <h3>Safe Coin Auto-Farm</h3>
+        <p>Automated coin collection with anti-teleport checks to keep your account safe from bans.</p>
+      </div>
 
-                <div class="terminal-container">
-                    <div class="terminal-header">
-                        <div class="terminal-dots">
-                            <div class="dot dot-red"></div><div class="dot dot-yellow"></div><div class="dot dot-green"></div>
-                        </div>
-                        <div class="terminal-title">bash — loader.lua</div>
-                        <i data-lucide="terminal" style="width:14px; height:14px; color:var(--muted);"></i>
-                    </div>
-                    <div class="terminal-body">
-                        <div class="script-text" id="scriptCode">loadstring(game:HttpGet("https://api.jnkie.com/api/v1/luascripts/public/89d3cc21d05834db4306129697dc90f516bc361540773a5e8b0af316dacf7773/download"))()</div>
-                        <button class="btn-copy" onclick="copyScript()">
-                            <i data-lucide="copy" style="width:16px; height:16px;"></i>
-                            <span>Copy Script</span>
-                        </button>
-                    </div>
-                </div>
-            </section>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="crosshair" size="20"></i></div>
+        <h3>Silent Aim & Auto-Shoot</h3>
+        <p>Never miss a shot as Sheriff or throw perfectly landed knives automatically as Murderer.</p>
+      </div>
 
-            <div class="metrics-banner">
-                <div class="metric-card"><div class="metric-value" id="counter">842,910</div><div class="metric-label">Eggs Harvested</div></div>
-                <div class="metric-card"><div class="metric-value" style="color:var(--cyan);">0.02ms</div><div class="metric-label">Avg Execution Latency</div></div>
-                <div class="metric-card"><div class="metric-value" style="color:#4ade80;">100%</div><div class="metric-label">Anti-Cheat Safety</div></div>
-                <div class="metric-card"><div class="metric-value">18.4K</div><div class="metric-label">Active Lobbies</div></div>
-            </div>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="shield" size="20"></i></div>
+        <h3>Anti-Kill & God Mode</h3>
+        <p>Custom toggleable protections including Gun Reach, Anti-Stun, and Murderer Proximity Alerts.</p>
+      </div>
 
-        <div id="tab-features" class="tab-view">
-            <section style="padding: 3rem 0;">
-                <div class="section-header">
-                    <h2 class="section-title">Execution Capabilities</h2>
-                    <p style="color:var(--muted)">Full breakdown of core modules packaged into EggSteal X.</p>
-                </div>
-                <div class="features-grid">
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="zap"></i></div><h3>Instant Proximity Steal</h3><p>Bypasses server interaction delays to steal target eggs before proximity prompts trigger for other players.</p></div>
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="shield"></i></div><h3>Memory Masking</h3><p>Dynamic thread protection and hook obfuscation keep client scripts isolated from automated detection.</p></div>
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="eye"></i></div><h3>Visual Target ESP</h3><p>Color-coded overlays that highlight legendary and mythical eggs across the map through walls.</p></div>
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="refresh-cw"></i></div><h3>Smart Server Hop</h3><p>Automatically hops active lobbies the moment target egg respawn timers exceed efficiency thresholds.</p></div>
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="code"></i></div><h3>Custom Lua Injector</h3><p>Load external modules or personal macros alongside the main runtime engine seamlessly.</p></div>
-                    <div class="feature-card"><div class="icon-box"><i data-lucide="cloud"></i></div><h3>Cloud Config Sync</h3><p>Sync keybinds, targeting priority profiles, and UI layouts instantly across multiple clients.</p></div>
-                </div>
-            </section>
-        </div>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="smartphone" size="20"></i></div>
+        <h3>Mobile UI Optimized</h3>
+        <p>Designed specifically to run smooth on mobile executors like Delta, Codex, and Hydrogen.</p>
+      </div>
 
-        <div id="tab-docs" class="tab-view">
-            <section style="padding: 3rem 0;">
-                <div class="section-header">
-                    <h2 class="section-title">Developer Documentation</h2>
-                    <p style="color:var(--muted)">API Methods available for custom module creation.</p>
-                </div>
-                <div class="docs-container">
-                    <table class="api-table">
-                        <thead>
-                            <tr><th>Method</th><th>Parameters</th><th>Description</th></tr>
-                        </thead>
-                        <tbody>
-                            <tr><td><span class="code-tag">EggSteal:StealTarget(id)</span></td><td>Target ID (String)</td><td>Force-executes instant pickup on specific egg entity.</td></tr>
-                            <tr><td><span class="code-tag">EggSteal:SetFilter(rarity)</span></td><td>Rarity (Array)</td><td>Filters ESP and auto-pickup to designated rarities.</td></tr>
-                            <tr><td><span class="code-tag">EggSteal:ToggleBypass(bool)</span></td><td>State (Boolean)</td><td>Enables or disables memory obfuscation wrapper.</td></tr>
-                            <tr><td><span class="code-tag">EggSteal:ServerHop()</span></td><td>None</td><td>Initiates immediate migration to an uncrowded server.</td></tr>
-                        </tbody>
-                    </table>
-                </div>
-            </section>
-        </div>
-
-        <div id="tab-changelog" class="tab-view">
-            <section style="padding: 3rem 0;">
-                <div class="section-header">
-                    <h2 class="section-title">Patch Notes & Updates</h2>
-                    <p style="color:var(--muted)">Stay up to date with continuous execution enhancements.</p>
-                </div>
-                <div class="changelog-list">
-                    <div class="changelog-item">
-                        <span class="tag tag-v3">v3.2.0 — Latest</span>
-                        <h3>Bypass Framework Update</h3>
-                        <p style="color:var(--muted); margin-top:0.5rem; font-size:0.9rem;">Updated proximity hooks for latest game updates. Reduced execution latency by 15% across all network configurations.</p>
-                    </div>
-                    <div class="changelog-item">
-                        <span class="tag tag-v3" style="background:rgba(6,182,212,0.2); color:var(--cyan); border-color:rgba(6,182,212,0.4);">v3.1.0</span>
-                        <h3>Cloud Config Engine Added</h3>
-                        <p style="color:var(--muted); margin-top:0.5rem; font-size:0.9rem;">Introduced cross-session profile storage and automatic server hopping algorithm optimizations.</p>
-                    </div>
-                </div>
-            </section>
-        </div>
-
-        <footer>
-            <div>&copy; 2026 EGGSTEAL X Engine. All rights reserved.</div>
-            <div style="display:flex; gap:1.5rem;">
-                <a href="#" style="color:var(--muted); text-decoration:none;" onclick="switchTab('docs')">Docs</a>
-                <a href="#" style="color:var(--muted); text-decoration:none;" onclick="switchTab('changelog')">Changelog</a>
-            </div>
-        </footer>
+      <div class="feature-card">
+        <div class="feature-icon"><i data-lucide="cpu" size="20"></i></div>
+        <h3>Zero Lag Execution</h3>
+        <p>Optimized codebase with clean garbage collection to prevent frame drops in intense matches.</p>
+      </div>
     </div>
+  </section>
 
-    <div class="toast" id="toast">
-        <i data-lucide="check-circle-2" style="color:#4ade80; width:20px; height:20px;"></i>
-        <span>Script copied to clipboard!</span>
+  <!-- Footer -->
+  <footer>
+    <p>&copy; 2026 Vortex Hub. Designed for high performance gameplay.</p>
+  </footer>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Modal Header</h3>
+        <button class="close-btn" id="closeModal"><i data-lucide="x" size="18"></i></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        Modal content goes here...
+      </div>
     </div>
+  </div>
 
-    <script>
-        lucide.createIcons();
+  <!-- Toast Notification -->
+  <div class="toast" id="toast">
+    <i data-lucide="check-circle" size="18"></i>
+    <span id="toastMsg">Script copied to clipboard!</span>
+  </div>
 
-        // Drawer Menu Toggle
-        function toggleMenu() {
-            document.getElementById('drawer').classList.toggle('active');
-            document.getElementById('overlay').classList.toggle('active');
-        }
+  <script>
+    // Initialize Lucide Icons
+    lucide.createIcons();
 
-        // Tab Switching System
-        function switchTab(tabName) {
-            document.querySelectorAll('.tab-view').forEach(view => view.classList.remove('active'));
-            const target = document.getElementById(`tab-${tabName}`);
-            if (target) target.classList.add('active');
-            
-            // Close drawer menu if open
-            document.getElementById('drawer').classList.remove('active');
-            document.getElementById('overlay').classList.remove('active');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
+    // DOM Elements
+    const dotsBtn = document.getElementById('dotsBtn');
+    const dropdownMenu = document.getElementById('dropdownMenu');
+    const copyBtn = document.getElementById('copyBtn');
+    const scriptText = document.getElementById('scriptText').innerText;
+    const toast = document.getElementById('toast');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalTitle = document.getElementById('modalTitle');
+    const modalBody = document.getElementById('modalBody');
+    const closeModal = document.getElementById('closeModal');
 
-        // Script Copying
-        function copyScript() {
-            const script = document.getElementById('scriptCode').innerText;
-            navigator.clipboard.writeText(script).then(() => {
-                const toast = document.getElementById('toast');
-                toast.classList.add('show');
-                setTimeout(() => toast.classList.remove('show'), 2500);
-            });
-        }
+    // Toggle 3-Dots Dropdown
+    dotsBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      dropdownMenu.classList.toggle('active');
+    });
 
-        // Live Counter Animation
-        let count = 842910;
-        setInterval(() => {
-            count += Math.floor(Math.random() * 3) + 1;
-            document.getElementById('counter').innerText = count.toLocaleString();
-        }, 2000);
+    // Close Dropdown when clicking outside
+    document.addEventListener('click', () => {
+      dropdownMenu.classList.remove('active');
+    });
 
-        // Canvas Physics Animation
-        const canvas = document.getElementById('canvas');
-        const ctx = canvas.getContext('2d');
-        function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-        resize(); window.addEventListener('resize', resize);
+    // Copy Script Logic
+    copyBtn.addEventListener('click', () => {
+      navigator.clipboard.writeText(scriptText).then(() => {
+        showToast("Script copied to clipboard!");
+      }).catch(() => {
+        showToast("Failed to copy script.");
+      });
+    });
 
-        const eggs = Array.from({ length: 40 }, () => ({
-            x: Math.random() * canvas.width,
-            y: Math.random() * canvas.height,
-            size: Math.random() * 14 + 10,
-            vx: (Math.random() - 0.5) * 0.6,
-            vy: (Math.random() - 0.5) * 0.6,
-            rot: Math.random() * Math.PI * 2
-        }));
+    function showToast(message) {
+      document.getElementById('toastMsg').innerText = message;
+      toast.classList.add('show');
+      setTimeout(() => {
+        toast.classList.remove('show');
+      }, 2500);
+    }
 
-        function animate() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            eggs.forEach(e => {
-                e.x += e.vx; e.y += e.vy;
-                if (e.x < 0 || e.x > canvas.width) e.vx *= -1;
-                if (e.y < 0 || e.y > canvas.height) e.vy *= -1;
+    // Modal Handlers
+    document.getElementById('factOption').addEventListener('click', () => {
+      const facts = [
+        "Murder Mystery 2 was originally created by Nikilis back in 2014!",
+        "The Corrupt knife remains one of the rarest tradable items in MM2 history.",
+        "This script uses non-hooking ESP methods to reduce execution lag on low-end devices."
+      ];
+      const randomFact = facts[Math.floor(Math.random() * facts.length)];
+      openModal("MM2 Fun Fact", randomFact);
+    });
 
-                ctx.save();
-                ctx.translate(e.x, e.y);
-                ctx.rotate(e.rot);
-                ctx.beginPath();
-                ctx.ellipse(0, 0, e.size * 0.7, e.size, 0, 0, Math.PI * 2);
-                ctx.fillStyle = 'rgba(6, 182, 212, 0.15)';
-                ctx.strokeStyle = 'rgba(168, 85, 247, 0.25)';
-                ctx.lineWidth = 1;
-                ctx.fill(); ctx.stroke();
-                ctx.restore();
-            });
-            requestAnimationFrame(animate);
-        }
-        animate();
-    </script>
+    document.getElementById('supportOption').addEventListener('click', () => {
+      openModal("Support & FAQ", "<b>How do I execute this script?</b><br>Copy the script string above, paste it into your Roblox executor (PC or Mobile), and execute while inside MM2.<br><br><b>Is this script keyless?</b><br>Yes, zero key systems required.");
+    });
+
+    function openModal(title, content) {
+      modalTitle.innerText = title;
+      modalBody.innerHTML = content;
+      modalOverlay.classList.add('active');
+    }
+
+    closeModal.addEventListener('click', () => {
+      modalOverlay.classList.remove('active');
+    });
+
+    modalOverlay.addEventListener('click', (e) => {
+      if (e.target === modalOverlay) modalOverlay.classList.remove('active');
+    });
+  </script>
 </body>
 </html>
